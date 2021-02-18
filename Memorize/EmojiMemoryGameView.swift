@@ -12,7 +12,7 @@ struct EmojiMemoryGameView: View {
         }
         .foregroundColor(.orange)
         .padding()
-        .font(viewModel.cards.count>=6 ? .body : .largeTitle)
+        .font(viewModel.cards.count>=8 ? .body : .largeTitle)
         //.foregroundColor(viewModel.cards.count>6 ? .red : .blue)
     }
 }
