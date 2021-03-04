@@ -13,9 +13,12 @@ class EmojiMemoryGame : ObservableObject {
     
     static func createMemoryGame() -> MemoryGame<String>
     {
-        let emojis = ["👻","🎃","🦇","🕷","🧛‍♂️"]
-        let rand = Int.random(in: 2...5) // Random since 2 pair untill 5 pair
+        let emojis = ["🐶","🐱","🐭","🦊","🐻","🐴","🐋","🐮","🐷","🐔","🦐","🐟"]
+        let rand = Int.random(in: 4...12) // Random since 4 pair untill 12 pair
         return MemoryGame<String>(numberOfPairOfCards : rand) { emojis[$0] }
+    }
+    var scorePoint : Int {
+        model.score
     }
     
 

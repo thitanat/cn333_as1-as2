@@ -1,6 +1,6 @@
 import Foundation
 
-struct MemoryGame<CardContent> {
+struct MemoryGame<CardContent> where CardContent: Equatable {
     var cards: Array<Card>
     init(numberOfPairOfCards : Int , cardContentFactory: (Int) -> CardContent) {
         cards = []
@@ -12,26 +12,52 @@ struct MemoryGame<CardContent> {
         }
         cards.shuffle() // shuffle pair of card
     }
-    mutating func choose(card : Card) {
-        let choosenIndex = index(of : card)
-        cards[choosenIndex].isFaceUp = !cards[choosenIndex].isFaceUp
-        print("card choosen :  \(card)")
-    }
-    
-    func index(of : Card) -> Int {
-        for index in 0..<cards.count {
-            if cards[index].id == of.id {
-                return index
+    var indexOfTheOneAndOnlyFaceUpCard: Int? {
+        get{ cards.indices.filter {cards[$0].isFaceUp }.only }
+        set{
+            for index in cards.indices {
+                cards[index].isFaceUp = index == newValue
             }
         }
-        return -1
+        
     }
-    struct Card : Identifiable {
+    
+    
+    var score : Int = 0
+    mutating func choose(card : Card){
+        if let chosenIndex = cards.firstIndex(matching: card),
+           !cards[chosenIndex].isMatched, !cards[chosenIndex].isFaceUp {
+            if cards[chosenIndex].haveFacedUp == true{
+                score = score-1
+            }
+
+            if let potentialMatchIndex = indexOfTheOneAndOnlyFaceUpCard {
+                if cards[chosenIndex].content == cards[potentialMatchIndex].content {
+                        cards[chosenIndex].isMatched = true
+                        cards[potentialMatchIndex].isMatched = true
+                        score = score+2
+                    }
+            } else {
+                indexOfTheOneAndOnlyFaceUpCard = chosenIndex
+            }
+            cards[chosenIndex].isFaceUp = true
+            cards[chosenIndex].haveFacedUp = true
+        }
+    }
+        
+        
+        
+        
+        
+        
+        struct Card : Identifiable {
         var id = UUID()
         var isFaceUp = false
-        var Matched = false
+        var haveFacedUp = false
+        var isMatched = false
         var content : CardContent
     }
-
+    
+    
     
 }
